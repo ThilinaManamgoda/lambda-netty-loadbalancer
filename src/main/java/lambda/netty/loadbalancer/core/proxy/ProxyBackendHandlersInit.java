@@ -8,14 +8,15 @@ import io.netty.handler.codec.http.HttpRequestEncoder;
 /**
  * Created by maanadev on 5/20/17.
  */
-public class TestInit extends ChannelInitializer<SocketChannel>{
+public class ProxyBackendHandlersInit extends ChannelInitializer<SocketChannel> {
     Channel channel;
-    public TestInit(Channel channel) {
-        this.channel=channel;
+
+    public ProxyBackendHandlersInit(Channel channel) {
+        this.channel = channel;
     }
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        socketChannel.pipeline().addLast(new HttpRequestEncoder(),new ProxyBackendHandler(channel));
+        socketChannel.pipeline().addLast(new HttpRequestEncoder(), new ProxyBackendHandler(channel));
     }
 }
