@@ -5,27 +5,20 @@ import io.netty.channel.*;
 
 public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 
-    private final Channel inboundChannel;
+    Channel inboundChannel;
 
     public ProxyBackendHandler(Channel inboundChannel) {
         this.inboundChannel = inboundChannel;
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        ctx.read();
-    }
-
-    @Override
-    public void channelRead(final ChannelHandlerContext ctx, Object msg) {
-        System.out.println("backend read");
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         inboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
             @Override
-            public void operationComplete(ChannelFuture future) {
-                if (future.isSuccess()) {
-                    ctx.channel().read();
-                } else {
-                    future.channel().close();
+            public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                if (channelFuture.isSuccess()) {
+                    inboundChannel.close();
+                    channelFuture.channel().close();
                 }
             }
         });

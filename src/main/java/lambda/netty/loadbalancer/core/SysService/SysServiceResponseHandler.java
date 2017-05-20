@@ -1,17 +1,19 @@
 package lambda.netty.loadbalancer.core.SysService;
 
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.CharsetUtil;
 
 /**
  * Created by maanadev on 5/19/17.
  */
-public class SysServiceContentHandler extends SimpleChannelInboundHandler<HttpObject> {
-  ;
-    public SysServiceContentHandler() {
+public class SysServiceResponseHandler extends SimpleChannelInboundHandler<HttpObject> {
+    ;
+
+    public SysServiceResponseHandler() {
 
     }
 
@@ -30,5 +32,5 @@ public class SysServiceContentHandler extends SimpleChannelInboundHandler<HttpOb
             }
         }
     }
-    }
+}
 

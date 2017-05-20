@@ -4,8 +4,9 @@ package lambda.netty.loadbalancer.core;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.*;
-import lambda.netty.loadbalancer.core.SysService.SysServiceMainHandler;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import lambda.netty.loadbalancer.core.SysService.SysServiceHostResolveHandler;
 import lambda.netty.loadbalancer.core.proxy.ProxyFrontendHandler;
 
 /**
@@ -24,6 +25,6 @@ public class ServerHandlersInit extends ChannelInitializer<SocketChannel> {
 
 
         ChannelPipeline channelPipeline = socketChannel.pipeline();
-        channelPipeline.addLast(new HttpRequestDecoder(),new HttpContentDecompressor(),new SysServiceMainHandler(),new ProxyFrontendHandler(remoteHost,remotePort));
+        channelPipeline.addLast(new HttpRequestDecoder(), new HttpObjectAggregator(1048576), new SysServiceHostResolveHandler(), new ProxyFrontendHandler(remoteHost, remotePort));
     }
 }
