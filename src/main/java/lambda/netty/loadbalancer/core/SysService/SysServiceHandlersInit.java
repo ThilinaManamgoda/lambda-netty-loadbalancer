@@ -17,6 +17,8 @@ public class SysServiceHandlersInit extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-        socketChannel.pipeline().addLast(new HttpClientCodec(),new HttpContentDecompressor(),new SysServiceContentHandler() );
+
+        socketChannel.pipeline().addLast(new HttpClientCodec(), new HttpContentDecompressor(), new SysServiceResponseHandler());
+
     }
 }

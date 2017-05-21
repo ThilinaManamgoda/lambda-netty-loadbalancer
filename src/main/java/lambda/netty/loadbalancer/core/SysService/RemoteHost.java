@@ -6,6 +6,17 @@ package lambda.netty.loadbalancer.core.SysService;
 public class RemoteHost {
 
 
+
+    private String domain;
+    private int port;
+
+    public RemoteHost(String host) {
+        String[] domainConfig = host.split(":");
+        setDomain(domainConfig[0]);
+        setPort(Integer.parseInt(domainConfig[1]));
+    }
+
+
     public String getDomain() {
         return domain;
     }
@@ -22,13 +33,4 @@ public class RemoteHost {
         this.port = port;
     }
 
-    private String domain;
-    private int port;
-
-
-    public RemoteHost(String host) {
-       String [] domainConfig = host.split(":");
-       setDomain(domainConfig[0]);
-       setPort(Integer.parseInt(domainConfig[1]));
-    }
 }
