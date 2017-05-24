@@ -2,9 +2,11 @@ package lambda.netty.loadbalancer.core.proxy;
 
 
 import io.netty.channel.*;
+import org.apache.log4j.Logger;
 
 public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 
+    final static Logger logger = Logger.getLogger(ProxyBackendHandler.class);
 
     private final Channel inboundChannel;
 
@@ -20,9 +22,9 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 if (channelFuture.isSuccess()) {
+                    logger.info("Message redirected to the Client");
                     inboundChannel.close();
                     channelFuture.channel().close();
-
                 }
             }
         });

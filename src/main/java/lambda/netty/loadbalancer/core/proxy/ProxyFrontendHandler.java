@@ -5,9 +5,10 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 
-import lambda.netty.loadbalancer.core.SysService.RemoteHost;
+import org.apache.log4j.Logger;
 
 public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
+    final static Logger logger = Logger.getLogger(ProxyFrontendHandler.class);
 
     Bootstrap b;
     Object requestToProxyServer;
@@ -66,8 +67,9 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        RemoteHost remoteHost = new RemoteHost((String)evt);
-            ChannelFuture f = b.connect(remoteHost.getDomain(), remoteHost.getPort());
+        logger.info("Received the event");
+        ProxyEvent proxyEvent = (ProxyEvent) evt;
+            ChannelFuture f = b.connect(proxyEvent.getDomain(), proxyEvent.getPort());
 
             f.addListener(new ChannelFutureListener() {
 
@@ -75,8 +77,10 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
                     if (channelFuture.isSuccess()) {
+                        logger.info("Connected to the proxy server");
                         outboundChannel = channelFuture.channel();
                         outboundChannel.writeAndFlush(requestToProxyServer);
+
                     }
                 }
             });

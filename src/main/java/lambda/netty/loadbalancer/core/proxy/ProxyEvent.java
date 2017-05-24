@@ -1,16 +1,16 @@
-package lambda.netty.loadbalancer.core.SysService;
+package lambda.netty.loadbalancer.core.proxy;
 
 /**
  * Created by maanadev on 5/19/17.
  */
-public class RemoteHost {
+public class ProxyEvent {
 
 
 
     private String domain;
     private int port;
 
-    public RemoteHost(String host) {
+    public ProxyEvent(String host) {
         String[] domainConfig = host.split(":");
         setDomain(domainConfig[0]);
         setPort(Integer.parseInt(domainConfig[1]));
