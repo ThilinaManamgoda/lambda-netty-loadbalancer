@@ -13,8 +13,8 @@ import java.nio.charset.Charset;
  * Created by maanadev on 5/18/17.
  */
 public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
+
     private final static String HOST = "Host";
-    AttributeKey attributeKey = AttributeKey.valueOf("lambda");
     Channel remoteHostChannel = null;
     EventLoopGroup remoteHostEventLoopGroup;
     public SysServiceHostResolveHandler(EventLoopGroup remoteHostEventLoopGroup) {
@@ -30,8 +30,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
                 .channel(NioSocketChannel.class)
                 .handler(new SysServiceHandlersInit(ctx));
 
-        ChannelFuture future = b.connect("127.0.0.1", Integer.parseInt("8081"));
-        future.addListeners(new ChannelFutureListener() {
+        b.connect("127.0.0.1", Integer.parseInt("8081")).addListeners(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 remoteHostChannel=channelFuture.channel();
@@ -57,7 +56,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
             RemoteHost remoteHost = new RemoteHost(host);
 
             System.out.println(remoteHost.getDomain() + " " + remoteHost.getPort());
-            getIp();
+            getIp(ctx);
         } else {
             System.out.println(msg);
         }
@@ -65,7 +64,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
     }
 
 
-    private void getIp() throws InterruptedException {
+    private void getIp(ChannelHandlerContext ctx) throws InterruptedException {
 
         // Prepare the HTTP request.
         HttpRequest request = new DefaultFullHttpRequest(
