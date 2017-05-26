@@ -12,9 +12,10 @@ import java.nio.charset.StandardCharsets;
 
 public class SysServiceResponseHandler extends SimpleChannelInboundHandler<HttpObject> {
     final static Logger logger = Logger.getLogger(SysServiceResponseHandler.class);
-   private ChannelHandlerContext mainCtx;
+    private ChannelHandlerContext mainCtx;
+
     public SysServiceResponseHandler(ChannelHandlerContext mainCtx) {
-        this.mainCtx=mainCtx;
+        this.mainCtx = mainCtx;
     }
 
     @Override

@@ -32,12 +32,12 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
         b.connect("127.0.0.1", Integer.parseInt("8081")).addListeners(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                if(channelFuture.isSuccess()){
+                if (channelFuture.isSuccess()) {
                     logger.info("connected to the System service");
                     remoteHostChannel = channelFuture.channel();
                     //Reading the main channel after Sys service is connected
                     mainChannel.read();
-                }else{
+                } else {
                     logger.error("Cannot connect to the System Service !");
                 }
             }

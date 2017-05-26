@@ -6,7 +6,6 @@ package lambda.netty.loadbalancer.core.proxy;
 public class ProxyEvent {
 
 
-
     private String domain;
     private int port;
 

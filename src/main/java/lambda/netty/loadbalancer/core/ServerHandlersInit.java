@@ -1,7 +1,6 @@
 package lambda.netty.loadbalancer.core;
 
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -18,7 +17,7 @@ public class ServerHandlersInit extends ChannelInitializer<SocketChannel> {
 
     private EventLoopGroup remoteHostEventLoopGroup;
 
-    public ServerHandlersInit( EventLoopGroup remoteHostEventLoopGroup ) {
+    public ServerHandlersInit(EventLoopGroup remoteHostEventLoopGroup) {
 
         this.remoteHostEventLoopGroup = remoteHostEventLoopGroup;
     }
