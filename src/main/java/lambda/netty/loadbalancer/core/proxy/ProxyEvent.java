@@ -1,9 +1,11 @@
 package lambda.netty.loadbalancer.core.proxy;
 
+import java.io.Serializable;
+
 /**
  * Created by maanadev on 5/19/17.
  */
-public class ProxyEvent {
+public class ProxyEvent implements Serializable {
 
 
     private String domain;
