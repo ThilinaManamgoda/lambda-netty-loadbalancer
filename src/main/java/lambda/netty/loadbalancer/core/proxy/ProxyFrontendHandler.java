@@ -65,22 +65,26 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         logger.info("Received the event");
-        ProxyEvent proxyEvent = (ProxyEvent) evt;
-        ChannelFuture f = b.connect(proxyEvent.getDomain(), proxyEvent.getPort());
+      if(evt instanceof ProxyEvent){
+          ProxyEvent proxyEvent = (ProxyEvent) evt;
+          ChannelFuture f = b.connect(proxyEvent.getDomain(), proxyEvent.getPort());
 
-        f.addListener(new ChannelFutureListener() {
+          f.addListener(new ChannelFutureListener() {
 
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
+              @Override
+              public void operationComplete(ChannelFuture channelFuture) throws Exception {
 
-                if (channelFuture.isSuccess()) {
-                    logger.info("Connected to the proxy server");
-                    outboundChannel = channelFuture.channel();
-                    outboundChannel.writeAndFlush(requestToProxyServer);
+                  if (channelFuture.isSuccess()) {
+                      logger.info("Connected to the proxy server");
+                      outboundChannel = channelFuture.channel();
+                      outboundChannel.writeAndFlush(requestToProxyServer);
 
-                }
-            }
-        });
+                  }
+              }
+          });
+      }else{
+          System.out.println(evt);
+      }
 
 
     }

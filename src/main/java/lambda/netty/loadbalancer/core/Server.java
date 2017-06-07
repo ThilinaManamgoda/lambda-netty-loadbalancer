@@ -8,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import lambda.netty.loadbalancer.core.sslconfigs.SSLHandlerProvider;
 
 public class Server {
     static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "8080"));
@@ -17,6 +18,9 @@ public class Server {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         EventLoopGroup remoteHostEventLoopGroup = new NioEventLoopGroup();
+
+        //Load SSL certs
+        SSLHandlerProvider.initSSLContext();
         try {
 
             ServerBootstrap b = new ServerBootstrap();
