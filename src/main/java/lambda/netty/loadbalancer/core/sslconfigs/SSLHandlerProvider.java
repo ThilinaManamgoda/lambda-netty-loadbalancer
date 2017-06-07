@@ -14,7 +14,7 @@ public class SSLHandlerProvider {
     private static final String PROTOCOL = "TLS";
     private static final String ALGORITHM_SUN_X509="SunX509";
     private static final String ALGORITHM="ssl.KeyManagerFactory.algorithm";
-    private static final String KEYSTORE="mytestkeys.jks";
+    private static final String KEYSTORE= "ssl_certs/mytestkeys.jks";
     private static final String KEYSTORE_TYPE="JKS";
     private static final String KEYSTORE_PASSWORD= "123456";
     private static final String CERT_PASSWORD="123456";
