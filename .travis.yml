@@ -3,3 +3,5 @@ jdk: oraclejdk8
 script: 
 - mvn test -B
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+before_install:
+  - ./install-dependencies.sh  
