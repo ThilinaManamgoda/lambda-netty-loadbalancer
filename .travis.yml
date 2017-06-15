@@ -3,5 +3,8 @@ jdk: oraclejdk8
 script: 
 - mvn test -B
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-before_install:
-  - ./install-dependencies.sh  
+install:
+- wget https://github.com/ThilinaManamgoda/jetcd/archive/master.zip
+- unzip master.zip -d .
+- pushd jetcd-master && mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && popd
+-   
