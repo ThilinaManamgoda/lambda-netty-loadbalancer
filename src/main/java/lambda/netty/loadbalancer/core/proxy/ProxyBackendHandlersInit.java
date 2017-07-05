@@ -5,9 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpRequestEncoder;
 
-/**
- * Created by maanadev on 5/20/17.
- */
+
 public class ProxyBackendHandlersInit extends ChannelInitializer<SocketChannel> {
     Channel channel;
 

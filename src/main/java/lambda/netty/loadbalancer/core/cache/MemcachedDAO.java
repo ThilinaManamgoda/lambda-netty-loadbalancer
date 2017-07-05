@@ -2,6 +2,7 @@ package lambda.netty.loadbalancer.core.cache;
 
 import net.spy.memcached.MemcachedClient;
 import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -14,6 +15,10 @@ public class MemcachedDAO {
     private static int MEMCACHED_TIMEOUT = 3600;
     static private MemcachedClient memcachedClient = null;
 
+    private MemcachedDAO() {
+
+    }
+
     public static MemcachedDAO getInstance() {
 
         if (memcachedClient == null) {
@@ -25,19 +30,16 @@ public class MemcachedDAO {
         }
         return new MemcachedDAO();
     }
-    public void shutDown(){
+
+    public void shutDown() {
         memcachedClient.shutdown();
     }
 
-    private MemcachedDAO() {
-
-    }
-
-    public  void save(String key, Object object) {
+    public void save(String key, Object object) {
         memcachedClient.add(key, MEMCACHED_TIMEOUT, object);
     }
 
-    public  Object get(String key) {
+    public Object get(String key) {
         return memcachedClient.get(key);
     }
 
