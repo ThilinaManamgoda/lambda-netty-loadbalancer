@@ -12,12 +12,8 @@ import lambda.netty.loadbalancer.core.SysService.SysServiceHostResolveHandler;
 import lambda.netty.loadbalancer.core.proxy.ProxyFrontendHandler;
 import lambda.netty.loadbalancer.core.sslconfigs.SSLHandlerProvider;
 
-import javax.net.ssl.SSLEngine;
 
 
-/**
- * Created by maanadev on 5/18/17.
- */
 public class ServerHandlersInit extends ChannelInitializer<SocketChannel> {
 
     private EventLoopGroup remoteHostEventLoopGroup;

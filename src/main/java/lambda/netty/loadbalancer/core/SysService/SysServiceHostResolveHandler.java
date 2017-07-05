@@ -4,6 +4,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
+import lambda.netty.loadbalancer.core.etcd.EtcdUtil;
 import lambda.netty.loadbalancer.core.proxy.ProxyEvent;
 import org.apache.log4j.Logger;
 
@@ -13,6 +14,8 @@ import org.apache.log4j.Logger;
 public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
     final static Logger logger = Logger.getLogger(SysServiceHostResolveHandler.class);
     private final static String HOST = "Host";
+    private static final String SYS_HOST = "127.0.0.1";
+    private static final int SYS_PORT = 8081;
     Channel remoteHostChannel = null;
     EventLoopGroup remoteHostEventLoopGroup;
 
@@ -29,7 +32,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
                 .channel(NioSocketChannel.class)
                 .handler(new SysServiceHandlersInit(ctx));
 
-        b.connect("127.0.0.1", Integer.parseInt("8081")).addListeners(new ChannelFutureListener() {
+        b.connect(SYS_HOST, SYS_PORT).addListeners(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
                 if (channelFuture.isSuccess()) {
@@ -61,6 +64,8 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
 
             logger.info(proxyEvent.getDomain() + " " + proxyEvent.getPort());
             getIp(ctx);
+            EtcdUtil.getValue("dddd")
+                    .thenAccept(System.out::println);
         } else {
             System.out.println(msg);
         }
