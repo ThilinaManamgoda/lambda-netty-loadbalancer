@@ -12,13 +12,19 @@
  * limitations under the License.
  */
 
-package lambda.netty.loadbalancer.core.loadbalance.statemodels;
+package lambda.netty.loadbalancer.core.loadbalance;
+
+import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
 
 import java.util.Queue;
 
-public interface State {
-    void pushHost(String host);
-    InstanceStates getState();
-    void setState(InstanceStates state);
-    Queue<String> getHosts();
+public class RoundRobinImpl implements LoadBalance {
+    @Override
+    public String getRemoteHost(State stateImpl) {
+
+        Queue<String> queue = stateImpl.getHosts();
+        String tmp = queue.poll();
+        queue.add(tmp);
+        return tmp;
+    }
 }

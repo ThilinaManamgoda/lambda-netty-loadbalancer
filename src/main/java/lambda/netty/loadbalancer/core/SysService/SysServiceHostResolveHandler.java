@@ -6,7 +6,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import lambda.netty.loadbalancer.core.etcd.EtcdClientException;
 import lambda.netty.loadbalancer.core.etcd.EtcdUtil;
-import lambda.netty.loadbalancer.core.loadbalance.StateJsonHelp;
+import lambda.netty.loadbalancer.core.loadbalance.LoadBalance;
+import lambda.netty.loadbalancer.core.loadbalance.RoundRobinImpl;
+import lambda.netty.loadbalancer.core.loadbalance.StateImplJsonHelp;
 import lambda.netty.loadbalancer.core.loadbalance.statemodels.InstanceStates;
 import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
 import lambda.netty.loadbalancer.core.proxy.ProxyEvent;
@@ -67,21 +69,26 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
             EtcdUtil.getValue("localhost").thenAccept(x -> {
 
                 String val = String.valueOf(x.getKvs(0).getValue().toString(StandardCharsets.UTF_8));
-                State state = StateJsonHelp.getObject(val);
+                System.out.println(val);
+                State stateImpl = StateImplJsonHelp.getObject(val);
 
-                if (state.getState() == InstanceStates.DOWN) {
+                if (stateImpl.getState() == InstanceStates.DOWN) {
                     logger.info("No instance is up ! informing Sys-service ");
 
                     requestIp();
 
-                    state.setState(InstanceStates.RUNNING);
+
+                } else {
+                    logger.info("These instances are up and running");
+                    LoadBalance loadBalance = new RoundRobinImpl();
+                    loadBalance.getRemoteHost(stateImpl);
+
                     try {
-                        EtcdUtil.putValue("localhost", StateJsonHelp.toString(state));
+                        EtcdUtil.putValue("localhost", StateImplJsonHelp.toString(stateImpl));
                     } catch (EtcdClientException e) {
                         logger.error("Cannot connect to ETCD !", e);
                     }
-                } else {
-                    logger.info("These instances are up and running");
+                    ctx.fireUserEventTriggered(new Integer(1322));
                     requestIp();
                 }
 

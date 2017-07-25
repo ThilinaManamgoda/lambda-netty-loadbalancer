@@ -12,13 +12,12 @@
  * limitations under the License.
  */
 
-package lambda.netty.loadbalancer.core.loadbalance.statemodels;
+package lambda.netty.loadbalancer.core.loadbalance;
 
-import java.util.Queue;
+import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
 
-public interface State {
-    void pushHost(String host);
-    InstanceStates getState();
-    void setState(InstanceStates state);
-    Queue<String> getHosts();
+public interface LoadBalance {
+
+     String getRemoteHost(State stateImpl);
+
 }

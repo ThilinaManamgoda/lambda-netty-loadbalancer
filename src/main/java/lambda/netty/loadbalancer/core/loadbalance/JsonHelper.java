@@ -17,7 +17,7 @@ package lambda.netty.loadbalancer.core.loadbalance;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lambda.netty.loadbalancer.core.loadbalance.statemodels.InstanceStates;
-import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
+import lambda.netty.loadbalancer.core.loadbalance.statemodels.StateImpl;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -55,10 +55,10 @@ logger.error("Cannot parse the String !",e);        }
 
 
     public static void main(String[] args) {
-        State state = new State();
-        state.setState(InstanceStates.RUNNING);
-        state.pushHost("192.168.1.1");
-        state.pushHost("localhost");
+        StateImpl stateImpl = new StateImpl();
+        stateImpl.setState(InstanceStates.RUNNING);
+        stateImpl.pushHost("192.168.1.1");
+        stateImpl.pushHost("localhost");
 
     }
 

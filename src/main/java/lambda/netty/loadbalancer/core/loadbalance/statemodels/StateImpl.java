@@ -14,11 +14,34 @@
 
 package lambda.netty.loadbalancer.core.loadbalance.statemodels;
 
+
+import java.util.LinkedList;
 import java.util.Queue;
 
-public interface State {
-    void pushHost(String host);
-    InstanceStates getState();
-    void setState(InstanceStates state);
-    Queue<String> getHosts();
+public class StateImpl implements State {
+
+    private Queue<String> hosts = new LinkedList<>();
+    private InstanceStates state;
+
+    public StateImpl(){}
+
+    public InstanceStates getState() {
+        return state;
+    }
+
+    public void setState(InstanceStates state) {
+        this.state = state;
+    }
+
+    public Queue<String> getHosts() {
+
+        return hosts ;
+    }
+    public void pushHost(String host){
+        hosts.add(host);
+    }
+
+    public String pullHost(){
+        return hosts.poll();
+    }
 }
