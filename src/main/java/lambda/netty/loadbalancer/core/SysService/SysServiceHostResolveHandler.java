@@ -1,11 +1,14 @@
 package lambda.netty.loadbalancer.core.SysService;
 
-import com.google.protobuf.ByteString;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
+import lambda.netty.loadbalancer.core.etcd.EtcdClientException;
 import lambda.netty.loadbalancer.core.etcd.EtcdUtil;
+import lambda.netty.loadbalancer.core.loadbalance.StateJsonHelp;
+import lambda.netty.loadbalancer.core.loadbalance.statemodels.InstanceStates;
+import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
 import lambda.netty.loadbalancer.core.proxy.ProxyEvent;
 import org.apache.log4j.Logger;
 
@@ -19,7 +22,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
     Channel remoteHostChannel = null;
     EventLoopGroup remoteHostEventLoopGroup;
 
-    public  SysServiceHostResolveHandler(EventLoopGroup remoteHostEventLoopGroup) {
+    public SysServiceHostResolveHandler(EventLoopGroup remoteHostEventLoopGroup) {
         this.remoteHostEventLoopGroup = remoteHostEventLoopGroup;
     }
 
@@ -61,36 +64,37 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
             HttpRequest request = (HttpRequest) msg;
             String host = request.headers().get(HOST);
             ProxyEvent proxyEvent = new ProxyEvent(host);
-            EtcdUtil.getValue("localhost").thenAccept(x-> {
-                    String val = String.valueOf(x.getKvs(0).getValue().toString(StandardCharsets.UTF_8));
+            EtcdUtil.getValue("localhost").thenAccept(x -> {
 
-                    String state= val.split(";")[0].split("=")[1];
-                    String addr= val.split(";")[0].split("=")[1];
+                String val = String.valueOf(x.getKvs(0).getValue().toString(StandardCharsets.UTF_8));
+                State state = StateJsonHelp.getObject(val);
 
-                    if(state.equals("DOWN")){
-                       logger.info("No instance is up ! informing Sys-service ");
-                        try {
-                            requestIp();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }else{
-                        logger.info("These instances are up and running");
-                        
+                if (state.getState() == InstanceStates.DOWN) {
+                    logger.info("No instance is up ! informing Sys-service ");
+
+                    requestIp();
+
+                    state.setState(InstanceStates.RUNNING);
+                    try {
+                        EtcdUtil.putValue("localhost", StateJsonHelp.toString(state));
+                    } catch (EtcdClientException e) {
+                        logger.error("Cannot connect to ETCD !", e);
                     }
+                } else {
+                    logger.info("These instances are up and running");
+                    requestIp();
+                }
 
             });
 
             logger.info(proxyEvent.getDomain() + " " + proxyEvent.getPort());
 
-        } else {
-            System.out.println(msg);
         }
         ctx.fireChannelRead(msg);
     }
 
 
-    private void requestIp() throws InterruptedException {
+    private void requestIp() {
 
         // Prepare the HTTP request.
         HttpRequest request = new DefaultFullHttpRequest(
@@ -102,7 +106,11 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
         // Send the HTTP request.
         remoteHostChannel.writeAndFlush(request);
         // Wait for the server to close the connection.
-        remoteHostChannel.closeFuture().sync();
+        try {
+            remoteHostChannel.closeFuture().sync();
+        } catch (InterruptedException e) {
+            logger.error("Couldn't close the connection with the Sys-service !", e);
+        }
         logger.info("Request sent to the System Service");
 
     }

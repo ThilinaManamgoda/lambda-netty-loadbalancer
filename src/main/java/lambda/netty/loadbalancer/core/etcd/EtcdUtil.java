@@ -58,18 +58,4 @@ public class EtcdUtil {
         return rangeResponse;
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            EtcdUtil.putValue("localhost","state=DOWN;addr=localhost:8082");
-//
-//            EtcdUtil.getValue("localhost").thenAccept(x-> System.out.println(x.getKvs(0).getValue()));
-//
-//
-//            Thread.sleep(20000);
-//        } catch (EtcdClientException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

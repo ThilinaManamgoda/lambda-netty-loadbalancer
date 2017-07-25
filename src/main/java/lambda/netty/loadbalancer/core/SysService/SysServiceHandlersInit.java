@@ -10,9 +10,6 @@ import io.netty.handler.codec.http.HttpResponseDecoder;
 import org.apache.log4j.Logger;
 
 
-/**
- * Created by maanadev on 5/19/17.
- */
 public class SysServiceHandlersInit extends ChannelInitializer<SocketChannel> {
     final static Logger logger = Logger.getLogger(SysServiceHandlersInit.class);
     private ChannelHandlerContext mainCtx;
