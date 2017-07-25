@@ -1,5 +1,6 @@
 package lambda.netty.loadbalancer.core.SysService;
 
+import com.google.protobuf.ByteString;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -8,9 +9,8 @@ import lambda.netty.loadbalancer.core.etcd.EtcdUtil;
 import lambda.netty.loadbalancer.core.proxy.ProxyEvent;
 import org.apache.log4j.Logger;
 
-/**
- * Created by maanadev on 5/18/17.
- */
+import java.nio.charset.StandardCharsets;
+
 public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
     final static Logger logger = Logger.getLogger(SysServiceHostResolveHandler.class);
     private final static String HOST = "Host";
@@ -19,7 +19,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
     Channel remoteHostChannel = null;
     EventLoopGroup remoteHostEventLoopGroup;
 
-    public SysServiceHostResolveHandler(EventLoopGroup remoteHostEventLoopGroup) {
+    public  SysServiceHostResolveHandler(EventLoopGroup remoteHostEventLoopGroup) {
         this.remoteHostEventLoopGroup = remoteHostEventLoopGroup;
     }
 
@@ -61,11 +61,28 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
             HttpRequest request = (HttpRequest) msg;
             String host = request.headers().get(HOST);
             ProxyEvent proxyEvent = new ProxyEvent(host);
+            EtcdUtil.getValue("localhost").thenAccept(x-> {
+                    String val = String.valueOf(x.getKvs(0).getValue().toString(StandardCharsets.UTF_8));
+
+                    String state= val.split(";")[0].split("=")[1];
+                    String addr= val.split(";")[0].split("=")[1];
+
+                    if(state.equals("DOWN")){
+                       logger.info("No instance is up ! informing Sys-service ");
+                        try {
+                            requestIp();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        logger.info("These instances are up and running");
+                        
+                    }
+
+            });
 
             logger.info(proxyEvent.getDomain() + " " + proxyEvent.getPort());
-            getIp(ctx);
-            EtcdUtil.getValue("dddd")
-                    .thenAccept(System.out::println);
+
         } else {
             System.out.println(msg);
         }
@@ -73,7 +90,7 @@ public class SysServiceHostResolveHandler extends ChannelInboundHandlerAdapter {
     }
 
 
-    private void getIp(ChannelHandlerContext ctx) throws InterruptedException {
+    private void requestIp() throws InterruptedException {
 
         // Prepare the HTTP request.
         HttpRequest request = new DefaultFullHttpRequest(
