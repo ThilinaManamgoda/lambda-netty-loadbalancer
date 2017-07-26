@@ -80,7 +80,6 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                         logger.info("Connected to the proxy server");
                         outboundChannel = channelFuture.channel();
                         outboundChannel.writeAndFlush(requestToProxyServer);
-
                     }
                 }
             });
