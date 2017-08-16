@@ -25,11 +25,11 @@ public class StateImplJsonHelp extends JsonHelper<StateImpl> {
         super(t);
     }
 
-    public static State getObject(String str){
-       return stateImplJsonHelp.jsonToObject(str);
+    public static State getObject(String str) {
+        return stateImplJsonHelp.jsonToObject(str);
     }
 
-    public static String toString(State stateImpl){
+    public static String toString(State stateImpl) {
         return stateImplJsonHelp.ObjToJson(stateImpl);
     }
 

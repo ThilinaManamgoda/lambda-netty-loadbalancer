@@ -2,6 +2,7 @@ package lambda.netty.loadbalancer.core;
 
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -29,6 +30,7 @@ public class Server {
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ServerHandlersInit(remoteHostEventLoopGroup))
                     .childOption(ChannelOption.AUTO_READ, false)
+                    .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .bind(LOCAL_PORT).sync().channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();

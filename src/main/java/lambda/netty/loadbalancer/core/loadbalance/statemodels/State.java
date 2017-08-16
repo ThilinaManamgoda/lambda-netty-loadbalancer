@@ -18,7 +18,10 @@ import java.util.Queue;
 
 public interface State {
     void pushHost(String host);
+
     InstanceStates getState();
+
     void setState(InstanceStates state);
+
     Queue<String> getHosts();
 }

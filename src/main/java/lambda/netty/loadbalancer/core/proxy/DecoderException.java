@@ -12,25 +12,11 @@
  * limitations under the License.
  */
 
-package lambda.netty.loadbalancer.core.loadbalance.statemodels;
+package lambda.netty.loadbalancer.core.proxy;
 
-public enum InstanceStates {
+public class DecoderException extends Exception {
 
-
-    DOWN("DOWN", 00), RUNNING("RUNNING", 01),STARTING("STARTING",03);
-    String state;
-    int code;
-
-    InstanceStates(String state, int code) {
-        this.state = state;
-        this.code = code;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public int getCode() {
-        return code;
+    public DecoderException() {
+        super("Decoder doesn't work. Not a FullHttpRequest Object !");
     }
 }

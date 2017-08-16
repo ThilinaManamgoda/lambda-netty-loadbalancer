@@ -23,7 +23,8 @@ public class StateImpl implements State {
     private Queue<String> hosts = new LinkedList<>();
     private InstanceStates state;
 
-    public StateImpl(){}
+    public StateImpl() {
+    }
 
     public InstanceStates getState() {
         return state;
@@ -35,13 +36,14 @@ public class StateImpl implements State {
 
     public Queue<String> getHosts() {
 
-        return hosts ;
+        return hosts;
     }
-    public void pushHost(String host){
+
+    public void pushHost(String host) {
         hosts.add(host);
     }
 
-    public String pullHost(){
+    public String pullHost() {
         return hosts.poll();
     }
 }

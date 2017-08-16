@@ -18,16 +18,7 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
     @Override
 
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        inboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                if (channelFuture.isSuccess()) {
-                    logger.info("Message redirected to the Client");
-                    inboundChannel.close();
-                    channelFuture.channel().close();
-                }
-            }
-        });
+        inboundChannel.writeAndFlush(msg).addListener(new CustomListener());
     }
 
     @Override
@@ -39,5 +30,17 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ProxyFrontendHandler.closeOnFlush(ctx.channel());
+    }
+
+    private final class CustomListener implements ChannelFutureListener {
+
+        @Override
+        public void operationComplete(ChannelFuture channelFuture) throws Exception {
+            if (channelFuture.isSuccess()) {
+                logger.info("Message redirected to the Client");
+                inboundChannel.close();
+                channelFuture.channel().close();
+            }
+        }
     }
 }

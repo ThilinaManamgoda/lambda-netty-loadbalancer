@@ -11,7 +11,6 @@ import com.coreos.jetcd.options.GetOption;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class EtcdUtil {
     final static Logger logger = Logger.getLogger(EtcdUtil.class);

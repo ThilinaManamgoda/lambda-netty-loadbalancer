@@ -16,8 +16,6 @@ package lambda.netty.loadbalancer.core.loadbalance;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lambda.netty.loadbalancer.core.loadbalance.statemodels.InstanceStates;
-import lambda.netty.loadbalancer.core.loadbalance.statemodels.StateImpl;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -29,37 +27,30 @@ public class JsonHelper<T> {
     private static ObjectMapper objectMapper = new ObjectMapper();
     private Class<T> t;
 
-    protected JsonHelper(Class<T> t){
+    protected JsonHelper(Class<T> t) {
 
         this.t = t;
     }
 
 
-    public  String ObjToJson(Object obj){
-        String tmp =null;
+    public String ObjToJson(Object obj) {
+        String tmp = null;
         try {
-           tmp= objectMapper.writeValueAsString(obj);
+            tmp = objectMapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-logger.error("Cannot process the Object !",e);        }
+            logger.error("Cannot process the Object !", e);
+        }
         return tmp;
     }
 
-    public T jsonToObject(String str){
-        T tmp=null;
+    public T jsonToObject(String str) {
+        T tmp = null;
         try {
-            tmp =objectMapper.readValue(str,t);
+            tmp = objectMapper.readValue(str, t);
         } catch (IOException e) {
-logger.error("Cannot parse the String !",e);        }
+            logger.error("Cannot parse the String !", e);
+        }
         return tmp;
-    }
-
-
-    public static void main(String[] args) {
-        StateImpl stateImpl = new StateImpl();
-        stateImpl.setState(InstanceStates.RUNNING);
-        stateImpl.pushHost("192.168.1.1");
-        stateImpl.pushHost("localhost");
-
     }
 
 }

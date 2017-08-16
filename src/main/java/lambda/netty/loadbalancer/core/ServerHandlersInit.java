@@ -13,7 +13,6 @@ import lambda.netty.loadbalancer.core.proxy.ProxyFrontendHandler;
 import lambda.netty.loadbalancer.core.sslconfigs.SSLHandlerProvider;
 
 
-
 public class ServerHandlersInit extends ChannelInitializer<SocketChannel> {
 
     private EventLoopGroup remoteHostEventLoopGroup;

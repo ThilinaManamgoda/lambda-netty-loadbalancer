@@ -12,25 +12,20 @@
  * limitations under the License.
  */
 
-package lambda.netty.loadbalancer.core.loadbalance.statemodels;
+package lambda.netty.loadbalancer.core.loadbalance;
 
-public enum InstanceStates {
+import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
+
+public class LoadBalanceUtil {
+
+    private static LoadBalance loadBalance = new RoundRobinImpl();
 
 
-    DOWN("DOWN", 00), RUNNING("RUNNING", 01),STARTING("STARTING",03);
-    String state;
-    int code;
-
-    InstanceStates(String state, int code) {
-        this.state = state;
-        this.code = code;
+    private LoadBalanceUtil() {
     }
 
-    public String getState() {
-        return state;
-    }
 
-    public int getCode() {
-        return code;
+    public static String getRemoteHost(State state) {
+        return loadBalance.getRemoteHost(state);
     }
 }

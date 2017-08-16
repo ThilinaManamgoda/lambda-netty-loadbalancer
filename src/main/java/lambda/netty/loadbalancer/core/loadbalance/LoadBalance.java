@@ -18,6 +18,6 @@ import lambda.netty.loadbalancer.core.loadbalance.statemodels.State;
 
 public interface LoadBalance {
 
-     String getRemoteHost(State stateImpl);
+    String getRemoteHost(State stateImpl);
 
 }
